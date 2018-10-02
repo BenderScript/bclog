@@ -1,0 +1,117 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "bclogpb.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/logs": {
+      "post": {
+        "operationId": "CreateEntry",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CreateEntryResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BaseEntry"
+            }
+          }
+        ],
+        "tags": [
+          "BlockChainLog"
+        ]
+      }
+    },
+    "/v1/logs/{id}": {
+      "get": {
+        "operationId": "GetEntry",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetEntryResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BlockChainLog"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "BaseEntry": {
+      "type": "object",
+      "properties": {
+        "entryid": {
+          "$ref": "#/definitions/EntryId",
+          "description": "Optional, if not provided server will assign."
+        },
+        "text": {
+          "type": "string",
+          "title": "required"
+        }
+      }
+    },
+    "CreateEntryResp": {
+      "type": "object",
+      "properties": {
+        "entryid": {
+          "$ref": "#/definitions/EntryId"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "EntryId": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "uuid"
+        }
+      }
+    },
+    "GetEntryResp": {
+      "type": "object",
+      "properties": {
+        "entry": {
+          "$ref": "#/definitions/BaseEntry"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+
+option go_package="bclogpb";
+
+message EntryId {
+    // uuid
+    string id = 1;
+}
+
+message BaseEntry {
+    // Optional, if not provided server will assign.
+    EntryId entryid = 1;
+    // required
+    string text = 2;
+}
+
+message UpdateEntry {
+    // All required
+    EntryId entryid = 1;
+    string text = 2;
+    int32 rev = 10;
+}
+
+message GetEntry {
+    EntryId entryid = 1;
+}
+
+// We pass the text and Block Chain server verifies if it matches
+// the current text stored. Something like a sha256 comparison
+message VerifyEntry {
+    EntryId entryid = 1;
+    string text = 2;
+    int32 rev = 10;
+}
+
+message GetEntryReq {
+    string id = 1;
+}
+
+message GetEntryResp {
+    BaseEntry entry = 1;
+    google.protobuf.Timestamp timestamp = 10;
+}
+
+message CreateEntryReq {
+    BaseEntry entry = 1;
+}
+
+message CreateEntryResp {
+    EntryId entryid = 1;
+    google.protobuf.Timestamp timestamp = 10;
+}
+
+
+service BlockChainLog {
+    rpc CreateEntry(CreateEntryReq) returns (CreateEntryResp) {
+        option (google.api.http) = {
+            post: "/v1/logs"
+            body: "entry"
+        };
+    };
+
+    rpc GetEntry(GetEntryReq) returns (GetEntryResp) {
+        option (google.api.http) = {
+            get: "/v1/logs/{id}"
+        };
+    };
+
+}
